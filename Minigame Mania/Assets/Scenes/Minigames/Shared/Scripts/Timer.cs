@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -62,18 +64,20 @@ public class Timer : MonoBehaviour {
 
     void DetermineWinner()
     {
+        bool tie = false;
         string playerName = "error";
         int topScore = 0;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject g in players)
+
+        if (players[0].GetComponent<PlayerBehavior>().score > players[1].GetComponent<PlayerBehavior>().score) playerName = players[0].GetComponent<PlayerBehavior>().name;
+        else if (players[1].GetComponent<PlayerBehavior>().score > players[0].GetComponent<PlayerBehavior>().score) playerName = players[1].GetComponent<PlayerBehavior>().name;
+        else
         {
-            if (g.GetComponent<PlayerBehavior>().score > topScore)
-            {
-                topScore = g.GetComponent<PlayerBehavior>().score;
-                playerName = g.GetComponent<PlayerBehavior>().name;
-            }
+            print("no winner");
+            playerName = null;
         }
-        print(playerName + " " + topScore);
-        end.GetComponent<TextMeshProUGUI>().text = playerName + " has won.";
+
+        if (playerName == null) timeText.text = "Tie!";
+        else timeText.text = playerName + " is the winner!";
     }
 }
